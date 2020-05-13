@@ -1,4 +1,4 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TypeFamilies #-}
 module KahnSequential where
 
 import Control.Monad
@@ -46,7 +46,10 @@ instance Monad Process where
 instance MonadIO Process where
     liftIO m = Atom (Pure <$> m)
 
-instance Kahn Process IOQueue IOQueue where
+instance Kahn Process where
+    type InChannel Process  = IOQueue
+    type OutChannel Process = IOQueue
+
     newChannel = (\q -> (q, q)) <$> liftIO newIOQueue
     put q a    = liftIO (pushIOQueue q a)
     get q      = maybe (get q) return =<< liftIO (takeIOQueue q)
@@ -54,5 +57,5 @@ instance Kahn Process IOQueue IOQueue where
     doco [] = return ()
     doco as = doco =<< sequence [liftIO m | Atom m <- as]
 
-    run (Pure x) = return x
-    run (Atom m) = run =<< m
+    runKahn (Pure x) = return x
+    runKahn (Atom m) = runKahn =<< m

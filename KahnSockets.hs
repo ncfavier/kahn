@@ -1,4 +1,4 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TypeFamilies #-}
 module KahnSockets where
 
 import Control.Applicative
@@ -14,7 +14,10 @@ type Process = IO
 
 newtype Handle1 a = H Handle
 
-instance Kahn IO Handle1 Handle1 where
+instance Kahn IO where
+    type InChannel IO  = Handle1
+    type OutChannel IO = Handle1
+
     newChannel = do
         sock <- socket AF_INET Stream defaultProtocol
         setSocketOption sock ReuseAddr 1
@@ -41,4 +44,4 @@ instance Kahn IO Handle1 Handle1 where
             forkFinally a (\_ -> putMVar v ())
             return v
 
-    run = id
+    runKahn = id

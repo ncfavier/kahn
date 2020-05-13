@@ -1,4 +1,4 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TypeFamilies #-}
 module KahnThreads where
 
 import Control.Concurrent
@@ -9,7 +9,10 @@ import Kahn
 
 type Process = IO
 
-instance Kahn IO Chan Chan where
+instance Kahn IO where
+    type InChannel IO  = Chan
+    type OutChannel IO = Chan
+
     newChannel = (\c -> (c, c)) <$> newChan
     put c a    = writeChan c a >> yield
     get        = readChan
@@ -21,4 +24,4 @@ instance Kahn IO Chan Chan where
             forkFinally a (\_ -> putMVar v ())
             return v
 
-    run = id
+    runKahn = id
