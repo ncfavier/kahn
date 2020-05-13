@@ -14,7 +14,7 @@ main = do
     hSetBuffering stdout NoBuffering
     runKahn printIntegers
     -- runKahn primes
-    -- runKahn lockstep
+    -- runKahn pingpong
 
 integers o = put o `mapM_` [2..]
 
@@ -40,14 +40,14 @@ primes = do
         n <- get i
         when (n `mod` p /= 0) (put o n)
 
-lockstep :: Process ()
-lockstep = do
+pingpong :: Process ()
+pingpong = do
     (i1, o1) <- newChannel
     (i2, o2) <- newChannel
-    doco [proc "A" i1 o2, proc "B" i2 o1]
+    doco [proc "ping" i1 o2, proc "pong" i2 o1]
     where
     proc msg i o = forever $ do
-        liftIO $ printf "%s: PUT\n" msg
+        liftIO $ printf "%s: put\n" msg
         put o 1
-        liftIO $ printf "%s: GET\n" msg
+        liftIO $ printf "%s: get\n" msg
         get i
