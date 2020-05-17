@@ -4,7 +4,7 @@ module Kahn where
 import Control.Monad.IO.Class
 
 class MonadIO m => Kahn m where
-    type InChannel m  :: * -> *
+    type InChannel  m :: * -> *
     type OutChannel m :: * -> *
 
     newChannel :: m (InChannel m a, OutChannel m a)
@@ -13,4 +13,4 @@ class MonadIO m => Kahn m where
 
     doco       :: [m ()] -> m ()
 
-    runKahn    :: m a -> IO a
+    run    :: m a -> IO a

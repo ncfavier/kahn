@@ -12,19 +12,23 @@ import KahnThreads
 
 main = do
     hSetBuffering stdout NoBuffering
-    runKahn printIntegers
-    -- runKahn primes
-    -- runKahn pingpong
+    run printIntegers
+    -- run primes
+    -- run pingpong
 
+-- Envoie les entiers à partir de 2 dans le canal `o`
 integers o = put o `mapM_` [2..]
 
+-- Lit depuis le canal `i` et affiche sur la sortie standard
 output i = forever (liftIO . print =<< get i)
 
+-- Affiche les entiers à partir de 2
 printIntegers :: Process ()
 printIntegers = do
     (i, o) <- newChannel
     doco [integers o, output i]
 
+-- Affiche la suite des nombres premiers en utilisant le crible d'Ératosthène
 primes :: Process ()
 primes = do
     (i1, o1) <- newChannel
@@ -40,6 +44,7 @@ primes = do
         n <- get i
         when (n `mod` p /= 0) (put o n)
 
+-- Ping? Pong.
 pingpong :: Process ()
 pingpong = do
     (i1, o1) <- newChannel
