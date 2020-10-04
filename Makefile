@@ -8,7 +8,7 @@ clean:
 
 .PHONY: archive
 archive:
-	tar -cvzf favier.tgz --transform 's,^,favier/,' *.hs Makefile LISEZMOI.pdf
+	tar -cvzf favier.tgz --transform 's,^,favier/,' *.hs Makefile README.pdf
 
 %.pdf: %.md
-	pandoc -V fontsize=12pt --highlight-style monochrome $< -o $@
+	pandoc --pdf-engine xelatex --highlight-style kate $< -o $@

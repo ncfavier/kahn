@@ -3,6 +3,14 @@ title: Réseaux de Kahn
 subtitle: Projet de systèmes
 author: Naïm Favier
 date: 17 mai 2020
+fontsize: 11pt
+geometry:
+    - margin=1in
+header-includes: |
+    \usepackage[french]{babel}
+    \usepackage{microtype}
+    \usepackage{crimson}
+    \usepackage[scale=0.9]{sourcecodepro}
 ---
 
 # Compilation
